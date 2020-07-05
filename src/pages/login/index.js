@@ -6,10 +6,12 @@ import {
     Icon,
     Input,
     Button,
-    message
+    message,
+    notification
 } from 'antd'
 import { FormInstance } from 'antd/lib/form';
 import { UserOutlined } from '@ant-design/icons';
+import {reqLogin} from '../../api/index'
 
 const { Item } = Form;
 export default class Login extends Component {
@@ -36,8 +38,27 @@ export default class Login extends Component {
         console.log(values,this.formRef)
     }
 
-    handleFinish = (e)=>{
-        console.log(e)
+    handleFinish = async (e)=>{
+        //校验成功之后调用的函数，此处可以去调用ajax;
+        try{
+            const res = await reqLogin(e);
+            console.log(res)
+            if(res.status === 1){
+                notification.info(
+                    {message:res.msg
+                        
+                    }
+                )
+            }else{
+                // 登录成功  进行跳转
+                // this.props.history.push('/admin')
+                this.props.history.replace('/')
+            }
+        }catch(e){
+            //封装错误信息  统一处理错误信息
+            console.log('请求出错',e)
+        }
+        
     }
     render() {
         const layout = {
