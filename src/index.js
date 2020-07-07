@@ -4,6 +4,12 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+import memoryUtils from './utils/memoryUtils';
+import store from './utils/storageUtils';
+
+const user = store.getUser();
+memoryUtils.user = user;
+
 ReactDOM.render(
   // <React.StrictMode>
     <App />,

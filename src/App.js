@@ -16,7 +16,7 @@ notification.config({
 function App() {
   return (
       <BrowserRouter>
-      <Button type='primary'>aasda</Button>
+      {/* <Button type='primary'>aasda</Button> */}
       <Switch> {/*只匹配其中一个*/}
         <Route path='/login' component={Login}></Route>
         <Route path='/' component={Admin}></Route>

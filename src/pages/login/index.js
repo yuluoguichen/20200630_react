@@ -6,12 +6,15 @@ import {
     Icon,
     Input,
     Button,
-    message,
     notification
 } from 'antd'
-import { FormInstance } from 'antd/lib/form';
+// import { FormInstance } from 'antd/lib/form';
 import { UserOutlined } from '@ant-design/icons';
 import {reqLogin} from '../../api/index'
+import {Redirect} from 'react-router-dom';
+
+import memoryUtils from '../../utils/memoryUtils';
+import storageUtils from '../../utils/storageUtils'
 
 const { Item } = Form;
 export default class Login extends Component {
@@ -50,8 +53,11 @@ export default class Login extends Component {
                     }
                 )
             }else{
-                // 登录成功  进行跳转
+                // 登录成功 记录登录状态 并且进行跳转
                 // this.props.history.push('/admin')
+                const user = res.data
+                memoryUtils.user = user // 保存在内存中
+                storageUtils.saveUser(user) // 保存到local中
                 this.props.history.replace('/')
             }
         }catch(e){
@@ -66,6 +72,10 @@ export default class Login extends Component {
             wrapperCol: { span: 16 },
         };
         console.log(Form)
+        const user = memoryUtils.user
+        if(user && user._id) {
+            return <Redirect to='/'/>
+          }
         return (
             <div className='login'>
                 <header className="login-header">
