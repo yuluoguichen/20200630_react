@@ -4,6 +4,11 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+//配置中文语言包
+import { ConfigProvider  } from 'antd';
+import zhCN from 'antd/es/locale/zh_CN'; 
+
+
 import memoryUtils from './utils/memoryUtils';
 import store from './utils/storageUtils';
 
@@ -12,7 +17,10 @@ memoryUtils.user = user;
 
 ReactDOM.render(
   // <React.StrictMode>
-    <App />,
+  <ConfigProvider locale={zhCN}>
+    <App /> 
+  </ConfigProvider>
+    ,
   // </React.StrictMode>,
   document.getElementById('root')
 );

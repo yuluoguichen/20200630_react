@@ -10,8 +10,8 @@ import {
 } from 'antd'
 // import { FormInstance } from 'antd/lib/form';
 import { UserOutlined } from '@ant-design/icons';
-import {reqLogin} from '../../api/index'
-import {Redirect} from 'react-router-dom';
+import { reqLogin } from '../../api/index'
+import { Redirect } from 'react-router-dom';
 
 import memoryUtils from '../../utils/memoryUtils';
 import storageUtils from '../../utils/storageUtils'
@@ -20,39 +20,38 @@ const { Item } = Form;
 export default class Login extends Component {
 
     formRef = React.createRef();
-    
-    validatePwd(rule,value,callback){
-        console.log('validatePwd()', rule, value)
-        if(!value) {
+
+    validatePwd(rule, value, callback) {
+        if (!value) {
             callback('密码必须输入')
-          } else if (value.length<4) {
+        } else if (value.length < 4) {
             callback('密码长度不能小于4位')
-          } else if (value.length>12) {
+        } else if (value.length > 12) {
             callback('密码长度不能大于12位')
-          } else if (!/^[a-zA-Z0-9_]+$/.test(value)) {
+        } else if (!/^[a-zA-Z0-9_]+$/.test(value)) {
             callback('密码必须是英文、数字或下划线组成')
-          } else {
+        } else {
             callback() // 验证通过
-          }
+        }
     }
 
     handleSubmit = (values) => {
-        
-        console.log(values,this.formRef)
+
+        console.log(values, this.formRef)
     }
 
-    handleFinish = async (e)=>{
+    handleFinish = async (e) => {
         //校验成功之后调用的函数，此处可以去调用ajax;
-        try{
+        try {
             const res = await reqLogin(e);
-            console.log(res)
-            if(res.status === 1){
+            if (res.status === 1) {
                 notification.info(
-                    {message:res.msg
-                        
+                    {
+                        message: res.msg
+
                     }
                 )
-            }else{
+            } else {
                 // 登录成功 记录登录状态 并且进行跳转
                 // this.props.history.push('/admin')
                 const user = res.data
@@ -60,22 +59,21 @@ export default class Login extends Component {
                 storageUtils.saveUser(user) // 保存到local中
                 this.props.history.replace('/')
             }
-        }catch(e){
+        } catch (e) {
             //封装错误信息  统一处理错误信息
-            console.log('请求出错',e)
+            console.log('请求出错', e)
         }
-        
+
     }
     render() {
         const layout = {
             labelCol: { span: 8 },
             wrapperCol: { span: 16 },
         };
-        console.log(Form)
         const user = memoryUtils.user
-        if(user && user._id) {
-            return <Redirect to='/'/>
-          }
+        if (user && user._id) {
+            return <Redirect to='/' />
+        }
         return (
             <div className='login'>
                 <header className="login-header">
@@ -84,9 +82,9 @@ export default class Login extends Component {
                 </header>
                 <section className="login-content">
                     <h2>用户登录</h2>
-                    <Form className='login-form' 
-                    ref = {this.formRef}
-                    onFinish={this.handleFinish}
+                    <Form className='login-form'
+                        ref={this.formRef}
+                        onFinish={this.handleFinish}
                     >
                         <Item
                             label='用户名'
@@ -108,7 +106,7 @@ export default class Login extends Component {
                             name='password'
                             {...layout}
                             rules={[
-                                {validator:this.validatePwd}
+                                { validator: this.validatePwd }
                             ]}
                         >
                             <Input

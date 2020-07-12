@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { message } from 'antd'
+import jsonp from 'jsonp'
 
-export default function ajax(url, data = {}, type) {
+export const ajax = (url, data = {}, type) => {
     return new Promise((resolve, reject) => {
         let promise;
         if (type === 'GET') {
@@ -22,4 +23,17 @@ export default function ajax(url, data = {}, type) {
         })
     })
 
+}
+
+export const Jsonp = ({url,params})=>{
+    return new Promise((resolve,reject)=>{
+        jsonp(url,{},(err,data)=>{
+            console.log('jsonp()', err, data)
+            if(err){
+                message.error('天气请求出错了', err)
+            }else{
+                resolve(data);
+            }
+        })
+    })
 }

@@ -15,8 +15,15 @@ import Pie from '../charts/pie'
 import NotFound from '../not-found'
 import Order from '../order'
 
-const { Header, Footer, Sider, Content } = Layout;
+const {Footer, Sider, Content } = Layout;
 export default class Admin extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            
+        }
+    }
+
     render() {
         if (!memoryUtils.user || !memoryUtils.user._id) {
             return (<Redirect to='/login'></Redirect>)
@@ -27,8 +34,8 @@ export default class Admin extends Component {
                     <NavLeft />
                 </Sider>
                 <Layout>
-                    <Header><Headers /></Header>
-                    <Content>
+                    <Headers />
+                    <Content style={{margin: 20, backgroundColor: '#fff'}}>
                         <Switch>
                             <Route path='/home' component={Home} />
                             <Route path='/category' component={Category} />
