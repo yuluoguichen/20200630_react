@@ -5,22 +5,25 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 //配置中文语言包
-import { ConfigProvider  } from 'antd';
-import zhCN from 'antd/es/locale/zh_CN'; 
-
+import { ConfigProvider } from 'antd';
+import zhCN from 'antd/es/locale/zh_CN';
+import { Provider } from 'react-redux';
 
 import memoryUtils from './utils/memoryUtils';
-import store from './utils/storageUtils';
+import storageUtilsStore from './utils/storageUtils';
+import store from './store'
 
-const user = store.getUser();
+const user = storageUtilsStore.getUser();
 memoryUtils.user = user;
 
 ReactDOM.render(
   // <React.StrictMode>
-  <ConfigProvider locale={zhCN}>
-    <App /> 
-  </ConfigProvider>
-    ,
+  <Provider store={store}>
+    <ConfigProvider locale={zhCN}>
+      <App />
+    </ConfigProvider>
+  </Provider>
+  ,
   // </React.StrictMode>,
   document.getElementById('root')
 );

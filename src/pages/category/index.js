@@ -1,7 +1,7 @@
 /*
  * @Author: 许峰博
  * @Date: 2020-07-06 23:05:22
- * @LastEditTime: 2020-07-13 00:03:11
+ * @LastEditTime: 2020-07-20 22:16:57
  * @LastEditors: 许峰博
  * @Description: 
  * @FilePath: \20200630_react\src\pages\category\index.js
@@ -20,11 +20,16 @@ import {
 import {
     PlusOutlined,
 } from '@ant-design/icons';
+import { connect } from 'react-redux'
 
-import { reqCategory, reqAddCategory } from '../../api/category'
+
+
+import { reqCategory, reqAddCategory ,reqUpdateCategory} from '../../api/category'
 import AddForm from './AddForm'
+import { QUERY_CATEGORY } from '../../store/actionContants'
 
-export default class Category extends Component {
+
+class Category extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -34,11 +39,11 @@ export default class Category extends Component {
                 current: 1,
                 pageSize: 10,
                 total: 0
-
             },
             showStatus: 0,
             parentId: '0',
             parentName: '一级分类列表',
+            currentName: '',
             categoryTitleList: [
                 {
                     parentId: '0',
@@ -73,28 +78,44 @@ export default class Category extends Component {
     }
 
     //获取品类列表
-    initDataSource = () => {
-        this.setState({
-            loading: true,
-        })
-        reqCategory(this.state.parentId).then(res => {
-            this.setState({
-                loading: false,
+    initDataSource = async () => {
+        /*  this.setState({
+             loading: true,
+         })
+         reqCategory({parentId:this.state.parentId}).then(res => {
+             this.setState({
+                 loading: false,
+             })
+             if (res.status === 0) {
+                 this.setState((pre) => ({
+                     table: { ...pre.table, dataSource: res.data }
+                 }))
+             }
+         });
+         console.log('获取品类列表initDataSource',) */
+
+        const { dispatch } = this.props;
+        try {
+            await dispatch({
+                type: QUERY_CATEGORY,
+                payload: {
+                    parentId: this.state.parentId
+                }
             })
-            if (res.status === 0) {
-                this.setState((pre) => ({
-                    table: { ...pre.table, dataSource: res.data }
-                }))
-            }
-        });
+            console.log(this.props)
+        } catch (error) {
+            console.log(error)
+        }
+
+
     }
 
     SetParentMessage = (parentId = '0', parentName = '一级分类列表', ListIndex = 0) => {
         const { categoryTitleList } = this.state;
         const length = categoryTitleList.length;
-        for (let index = ListIndex+1; index < length; index++) {
+        for (let index = ListIndex + 1; index < length; index++) {
             categoryTitleList.pop();
-            
+
         }
 
         this.setState((pre) => ({
@@ -120,7 +141,6 @@ export default class Category extends Component {
 
     //查看子分类
     showSubCategorys = (val, record) => {
-        console.log(val, record);
         const { categoryTitleList } = this.state;
         categoryTitleList.push({
             parentId: val,
@@ -134,11 +154,22 @@ export default class Category extends Component {
         })
     }
 
+    //修改分类
+    showUpdate = (val, record) => {
+        console.log(record);
+        this.setState({
+            showStatus: 1,
+            currentName: record.name,
+            currentId: record._id,
+
+        })
+    }
+
     handleAddFormConfirm = () => {
         const { formRef: { current } } = this.AddFormBindRef;
         const { getFieldsValue } = current;
-        console.log(this.TitleBreadcrumb);
-        reqAddCategory(getFieldsValue()).then(res => {
+        console.log(getFieldsValue());
+        reqUpdateCategory(getFieldsValue()).then(res => {
             if (res.status === 0) {
                 message.info('保存成功')
                 this.hideMoal();
@@ -168,6 +199,8 @@ export default class Category extends Component {
 
     render() {
         const { showStatus, loading, parentName, parentId } = this.state;
+        console.log(this.props)
+        const { categoryReducer: { categoryList } } = this.props;
         const columns = [
 
             {
@@ -181,7 +214,7 @@ export default class Category extends Component {
                 render: (val, record) => ( // 返回需要显示的界面标签
                     <span>
                         {/* <LinkButton onClick={() => this.showUpdate(category)}>修改分类</LinkButton> */}
-                        <Button type='text' onClick={() => this.showUpdate(val)} >修改分类</Button>
+                        <Button type='text' onClick={() => this.showUpdate(val, record)} >修改分类</Button>
                         {/*如何向事件回调函数传递参数: 先定义一个匿名函数, 在函数调用处理的函数并传入数据*/}
                         <Button type='text' onClick={() => this.showSubCategorys(val, record)}>查看子分类</Button>
 
@@ -211,7 +244,8 @@ export default class Category extends Component {
             columns,
             bordered: true,
             loading,
-            dataSource: this.state.table.dataSource,
+            // dataSource: this.state.table.dataSource,
+            dataSource: categoryList,
             pagination,
             rowKey: '_id'
 
@@ -227,10 +261,14 @@ export default class Category extends Component {
             visible: showStatus === 1,
             onCancel: this.hideMoal,
             onOk: this.handleAddFormConfirm,
-            destroyOnClose:true,
+            destroyOnClose: true,
         }
         const AddFormProps = {
-            onRef: this.handleAddFormBindRef
+            onRef: this.handleAddFormBindRef,
+            parentId: this.state.parentId,
+            parentName: this.state.parentName,
+            currentName: this.state.currentName,
+            currentId:this.state.currentId,
         }
         return (
             <Card {...cardProps}>
@@ -243,3 +281,15 @@ export default class Category extends Component {
         )
     }
 }
+
+const mapStateToProps = ({ categoryReducer }) => ({
+    categoryReducer
+})
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        dispatch
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Category)

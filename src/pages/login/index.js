@@ -16,8 +16,11 @@ import { Redirect } from 'react-router-dom';
 import memoryUtils from '../../utils/memoryUtils';
 import storageUtils from '../../utils/storageUtils'
 
+import { connect } from 'react-redux'
+
 const { Item } = Form;
-export default class Login extends Component {
+
+export class Login extends Component {
 
     formRef = React.createRef();
 
@@ -41,10 +44,17 @@ export default class Login extends Component {
     }
 
     handleFinish = async (e) => {
+        const {dispatch} = this.props;
         //校验成功之后调用的函数，此处可以去调用ajax;
         try {
-            const res = await reqLogin(e);
-            if (res.status === 1) {
+            // const res = await reqLogin(e);
+            dispatch({
+                type:'login',
+                payload:{
+                    ...e
+                }
+            })
+            /* if (res.status === 1) {
                 notification.info(
                     {
                         message: res.msg
@@ -58,7 +68,7 @@ export default class Login extends Component {
                 memoryUtils.user = user // 保存在内存中
                 storageUtils.saveUser(user) // 保存到local中
                 this.props.history.replace('/')
-            }
+            } */
         } catch (e) {
             //封装错误信息  统一处理错误信息
             console.log('请求出错', e)
@@ -66,12 +76,13 @@ export default class Login extends Component {
 
     }
     render() {
+        const {loginRedecer} = this.props;
         const layout = {
             labelCol: { span: 8 },
             wrapperCol: { span: 16 },
         };
-        const user = memoryUtils.user
-        if (user && user._id) {
+        const user = this.props.user
+        if (loginRedecer && loginRedecer._id) {
             return <Redirect to='/' />
         }
         return (
@@ -126,3 +137,15 @@ export default class Login extends Component {
         )
     }
 }
+
+const mapStateToProps = ({loginRedecer}) => ({
+    loginRedecer
+})
+
+const mapDispatchToProps = (dispatch) => {
+   return{
+       dispatch
+   }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login)

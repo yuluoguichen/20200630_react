@@ -1,7 +1,7 @@
 import {ajax} from './ajax'
 const BASE = '';
 
-export const reqCategory = (parentId) => ajax(`${BASE}/manage/category/list`,{parentId},'GET');
+export const reqCategory = ({parentId}) => ajax(`${BASE}/manage/category/list`,{parentId},'GET');
 
 // 添加分类
 export const reqAddCategory = ({categoryName, parentId}) => ajax(BASE + '/manage/category/add', {categoryName, parentId}, 'POST')

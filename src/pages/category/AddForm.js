@@ -1,7 +1,7 @@
 /*
  * @Author: 许峰博
  * @Date: 2020-07-11 15:17:27
- * @LastEditTime: 2020-07-13 00:01:45
+ * @LastEditTime: 2020-07-20 22:19:46
  * @LastEditors: 许峰博
  * @Description: 添加品类
  * @FilePath: \20200630_react\src\pages\category\AddForm.js
@@ -24,13 +24,15 @@ export default class AddForm extends Component {
         this.formRef = React.createRef();
     }
     render() {
+        const {parentId,parentName,currentId,currentName} = this.props;
+        console.log(this.props);
         return (
             <div>
                 <Form {...DEFAULT_LAYOUT} ref={this.formRef}>
-                    <Item label='parentId' name="parentId" > 
+                    <Item label='categoryId' name="categoryId"  initialValue={currentId} > 
                         <Input></Input>
                     </Item>
-                    <Item label='categoryName' name="categoryName">
+                    <Item label='categoryName' name="categoryName" initialValue={currentName}>
                         <Input placeholder='请输入分类名称' />
                     </Item>
                 </Form>

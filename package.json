@@ -42,5 +42,11 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://127.0.0.1:5000"
+  "proxy": "http://127.0.0.1:5000",
+  "devDependencies": {
+    "react-redux": "^7.2.0",
+    "redux": "^4.0.5",
+    "redux-logger": "^3.0.6",
+    "redux-saga": "^1.1.3"
+  }
 }

@@ -14,10 +14,8 @@ export const ajax = (url, data = {}, type) => {
             promise = axios.post(url, data)
         }
         promise.then(res => {
-            console.log(res);
             resolve(res.data);
         }).catch(e => {
-            console.log(e)
             // reject(e)
             message.error('请求出错了', e)
         })
@@ -28,7 +26,6 @@ export const ajax = (url, data = {}, type) => {
 export const Jsonp = ({url,params})=>{
     return new Promise((resolve,reject)=>{
         jsonp(url,{},(err,data)=>{
-            console.log('jsonp()', err, data)
             if(err){
                 message.error('天气请求出错了', err)
             }else{
