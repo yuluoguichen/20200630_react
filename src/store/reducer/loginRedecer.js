@@ -4,7 +4,7 @@ const defaultState = {
     isLogin: false,
     loading: false,
     error: '',
-    ...storageUtils.getUser()
+    user:{...storageUtils.getUser()}
 }
 export default (state = defaultState, action) => {
     const { type } = action;
@@ -33,7 +33,7 @@ export default (state = defaultState, action) => {
         case RECEIVE_USER:
             return {
                 ...state,
-                ...action.user,
+                user:action.user,
             }
         default:
             return state;

@@ -1,7 +1,7 @@
 /*
  * @Author: 许峰博
  * @Date: 2020-07-06 23:05:22
- * @LastEditTime: 2020-07-20 22:16:57
+ * @LastEditTime: 2020-08-07 14:59:43
  * @LastEditors: 许峰博
  * @Description: 
  * @FilePath: \20200630_react\src\pages\category\index.js
@@ -158,7 +158,7 @@ class Category extends Component {
     showUpdate = (val, record) => {
         console.log(record);
         this.setState({
-            showStatus: 1,
+            showStatus: 2,
             currentName: record.name,
             currentId: record._id,
 
@@ -168,14 +168,26 @@ class Category extends Component {
     handleAddFormConfirm = () => {
         const { formRef: { current } } = this.AddFormBindRef;
         const { getFieldsValue } = current;
+        if(this.state.showStatus === 1) {
+            //add
+            reqAddCategory(getFieldsValue()).then(res => {
+                if (res.status === 0) {
+                    message.info('保存成功')
+                    this.hideMoal();
+                }
+                this.initDataSource();
+            })
+        }else if (this.state.showStatus === 2){
+            reqUpdateCategory(getFieldsValue()).then(res => {
+                if (res.status === 0) {
+                    message.info('保存成功')
+                    this.hideMoal();
+                }
+                this.initDataSource();
+            })
+        }
         console.log(getFieldsValue());
-        reqUpdateCategory(getFieldsValue()).then(res => {
-            if (res.status === 0) {
-                message.info('保存成功')
-                this.hideMoal();
-            }
-            this.initDataSource();
-        })
+        
 
     }
 
@@ -258,7 +270,7 @@ class Category extends Component {
         }
         const AddFormModalProps = {
             title: '添加分类',
-            visible: showStatus === 1,
+            visible: showStatus !== 0,
             onCancel: this.hideMoal,
             onOk: this.handleAddFormConfirm,
             destroyOnClose: true,
@@ -269,6 +281,7 @@ class Category extends Component {
             parentName: this.state.parentName,
             currentName: this.state.currentName,
             currentId:this.state.currentId,
+            status:this.state.showStatus
         }
         return (
             <Card {...cardProps}>

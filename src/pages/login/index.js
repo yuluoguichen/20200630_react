@@ -76,13 +76,15 @@ export class Login extends Component {
 
     }
     render() {
+        console.log('登录成功后，执行render');
         const {loginRedecer} = this.props;
+        console.log(loginRedecer);
         const layout = {
             labelCol: { span: 8 },
             wrapperCol: { span: 16 },
         };
         const user = this.props.user
-        if (loginRedecer && loginRedecer._id) {
+        if (loginRedecer.user && loginRedecer.user._id) {
             return <Redirect to='/' />
         }
         return (
